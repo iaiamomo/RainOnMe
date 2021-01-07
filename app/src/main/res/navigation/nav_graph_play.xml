@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/settingPlay">
+
+    <fragment
+        android:id="@+id/play"
+        android:name="com.example.rainonme.Play"
+        android:label="fragment_play"
+        tools:layout="@layout/fragment_play" >
+        <action
+            android:id="@+id/action_play_to_gameOver"
+            app:destination="@id/gameOver" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingPlay"
+        android:name="com.example.rainonme.SettingPlay"
+        android:label="SettingPlay" >
+        <action
+            android:id="@+id/action_settingPlay_to_play"
+            app:destination="@id/play" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameOver"
+        android:name="com.example.rainonme.GameOver"
+        android:label="GameOver" >
+        <action
+            android:id="@+id/action_gameOver_to_settingPlay"
+            app:destination="@id/settingPlay" />
+    </fragment>
+</navigation>

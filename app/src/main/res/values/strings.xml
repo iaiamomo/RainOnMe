@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">RainOnMe</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="howto">
+        Tilting your device, you need to collect as many drops of water as possible, avoiding thunders. You have 3 lifes.
+        \nYou can decide to play offline or to play online with your friends.
+        \nCreating a game you will get a code tha you can share to play with others.
+        \nIf you already have a code you can insert it in the relative field and start playing.
+    </string>
+    <string name="weather">
+        Insert the location. You need to specify the city and the country.
+    </string>
+
+</resources>

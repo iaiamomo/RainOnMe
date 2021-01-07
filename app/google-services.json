@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "496813748446",
+    "project_id": "rainonme-1609260681261",
+    "storage_bucket": "rainonme-1609260681261.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496813748446:android:f5262ea4f0a3213549524f",
+        "android_client_info": {
+          "package_name": "com.example.rainonme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "496813748446-90ko1dtfc6d0grekbg2irjf3588nb2kn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rainonme",
+            "certificate_hash": "0756d8c35c48f8b5646602cd7b40fb5a0e08fb62"
+          }
+        },
+        {
+          "client_id": "496813748446-a6b0gua4bcd0vr1eifo6iga84e1b22ro.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfwGjtEZBOVCCmcof4nVAgWubk1khVwBA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "496813748446-a6b0gua4bcd0vr1eifo6iga84e1b22ro.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
