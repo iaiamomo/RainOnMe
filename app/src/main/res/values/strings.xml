@@ -13,5 +13,9 @@
     <string name="weather">
         Insert the location. You need to specify the city and the country.
     </string>
+    <string name="backpressed">
+        If you continue you will be logged out.
+        \nDo you want to log out?
+    </string>
 
 </resources>

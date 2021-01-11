@@ -1,6 +1,5 @@
 package com.example.rainonme
 
-import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,7 +9,6 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
 
 class HomeActivity : AppCompatActivity() {
 
@@ -19,7 +17,9 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        Log.i("infoapp", "onCreate HOME")
         Log.i("infoapp", "user "+ Conf.userUID)
+        Log.i("infoapp", "display name "+ Conf.nameSurname)
         Log.i("infoapp", "game "+ Conf.gameID)
         Log.i("infoapp", "gameover "+ Conf.gameOver.toString())
 
@@ -53,22 +53,18 @@ class HomeActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.logout -> {
                 Toast.makeText(this, "logout", Toast.LENGTH_SHORT)
+                Log.i("infoapp", "logout going to finish")
                 Conf.userUID = ""
                 Conf.gameID = ""
                 Conf.gameOver = false
                 Conf.nameSurname = ""
-
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-
+                finish()
                 return true}
             R.id.profile -> {
                 Log.i("infoapp", "profile")
                 Toast.makeText(this, "profile", Toast.LENGTH_SHORT)
-
-                val intent = Intent(this, ProfileActivity::class.java)
-                startActivity(intent)
-
+                val i = Intent(this, ProfileActivity::class.java)
+                startActivity(i)
                 return true}
             else -> {
                 return super.onOptionsItemSelected(item)
@@ -78,15 +74,32 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Really Exit?")
-        builder.setMessage("Do you really want to exit?")
+        builder.setMessage(R.string.backpressed)
         builder.setNegativeButton(R.string.no, null)
         builder.setPositiveButton(R.string.yes) {dialog, which ->
-            val a = Intent(Intent.ACTION_MAIN)
-                    .addCategory(Intent.CATEGORY_HOME)
-                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(a)
+            Log.i("infoapp", "onbackpressed going to finish")
+            Conf.userUID = ""
+            Conf.gameID = ""
+            Conf.gameOver = false
+            Conf.nameSurname = ""
+            finish()
         }
         builder.show()
     }
+
+    override fun onPause() {
+        super.onPause()
+        Log.i("infoapp", "onPause HOME")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("infoapp", "onDestroy HOME")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("infoapp", "onResume HOME")
+    }
+
 }

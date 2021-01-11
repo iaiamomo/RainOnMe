@@ -25,22 +25,26 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomeActivity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
         <activity android:name=".PlayActivity"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".HomeActivity"
+            android:screenOrientation="portrait">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity"/>
         </activity>
         <activity android:name=".WeatherActivity"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".HomeActivity"
+            android:screenOrientation="portrait">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity"/>
         </activity>
         <activity android:name=".ProfileActivity"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".HomeActivity"
+            android:screenOrientation="portrait">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity"/>
         </activity>

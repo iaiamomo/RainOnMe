@@ -1,13 +1,18 @@
 package com.example.rainonme
 
-import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.Request
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONArray
+import org.json.JSONObject
 
 class PlayActivity : AppCompatActivity() {
 
@@ -15,6 +20,7 @@ class PlayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
         setSupportActionBar(findViewById(R.id.toolbarPlay))
+        Log.i("infoapp", "onCreate PLAY")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -49,4 +55,31 @@ class PlayActivity : AppCompatActivity() {
         builder.show()
     }
 
+    override fun onPause() {
+        super.onPause()
+        Log.i("infoapp", "onPause PLAY")
+        if(Conf.gameID == ""){
+            Log.i("infoapp", "play offline")
+            Conf.alone = false
+            Conf.gameOver = false
+            Conf.polli = false
+            finish()
+        }else if(Conf.gameID != "" && !Conf.gameOver){
+            val url_req = Conf.url+"game_id="+Conf.gameID+"&who="+Conf.userUID
+            val stringRequest = StringRequest(Request.Method.DELETE, url_req, { _ ->
+                Log.i("infoapp", "delete game from user")
+                Conf.gameID = ""
+                Conf.gameOver = false
+                Conf.polli = false
+                finish()
+            }, { error: VolleyError? -> Log.i("info", "Errore removing user " + error)})
+            Volley.newRequestQueue(this).add(stringRequest)
+        }else{
+            Log.i("infoapp", "in game over, so leaderboard shown")
+            Conf.gameID = ""
+            Conf.gameOver = false
+            Conf.polli = false
+            finish()
+        }
+    }
 }

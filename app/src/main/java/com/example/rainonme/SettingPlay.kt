@@ -76,6 +76,7 @@ class SettingPlay : Fragment() {
                     Conf.gameID = gameid
                     Toast.makeText(this.context, gameid, Toast.LENGTH_SHORT).show()
                     hideElements(view)
+                    view.findViewById<TextView>(R.id.textViewGameId).text = gameid
                     view.findViewById<LinearLayout>(R.id.shareCode).visibility = View.VISIBLE
                     view.findViewById<Button>(R.id.buttonPlayGame).setOnClickListener { goToGame() }
                     view.findViewById<Button>(R.id.buttonCopy).setOnClickListener { copyCode(gameid) }

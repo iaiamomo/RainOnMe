@@ -1,6 +1,5 @@
 package com.example.rainonme
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +8,6 @@ import android.view.View
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.auth.UserProfileChangeRequest.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,16 +15,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if(Conf.userUID.isNotEmpty()){
-            changeActivity()
-        }
-
-        Log.i("infoapp", "user "+Conf.userUID)
-        Log.i("infoapp", "game "+Conf.gameID)
-        Log.i("infoapp", "gameover "+Conf.gameOver.toString())
-
         setContentView(R.layout.activity_main)
+
+        Log.i("infoapp", "onCreate MAIN")
 
         auth = FirebaseAuth.getInstance()
 
@@ -81,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                     Conf.userUID = user!!.uid
 
                     val updRequest = UserProfileChangeRequest.Builder().setDisplayName(displayName).build()
-                    user.updateProfile(updRequest).addOnCompleteListener(this) {task ->
+                    user.updateProfile(updRequest).addOnCompleteListener(this) { task ->
                         if(task.isSuccessful){
                             Toast.makeText(baseContext, "Authentication OK "+displayName, Toast.LENGTH_SHORT).show()
                             changeActivity()
@@ -138,11 +129,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.email_password_buttons).visibility = View.GONE
     }
 
-    private fun hideNameSurname(){
-        findViewById<LinearLayout>(R.id.name_surname).visibility = View.GONE
-        findViewById<LinearLayout>(R.id.email_password_buttons).visibility = View.VISIBLE
-    }
-
     private fun changeActivity(){
         hideProgressBar()
 
@@ -150,4 +136,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.i("infoapp", "onResume MAIN")
+    }
 }

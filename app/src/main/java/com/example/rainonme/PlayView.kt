@@ -8,16 +8,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.findFragment
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.android.volley.Request
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import org.json.JSONObject
 
 class PlayView(context: Context?, navigator: NavController) : View(context), SensorEventListener2 {
 
@@ -28,8 +22,12 @@ class PlayView(context: Context?, navigator: NavController) : View(context), Sen
 
     private lateinit var man : Bitmap
 
-    private val numThunders = 5
+    private var rndThunders : Array<Int>
+    private val maxThunders = 5
+    private var numThunders = 0
     private lateinit var thunders : Array<Bitmap>
+    private var showThunders = MutableList<Any>(0, {})
+    private lateinit var matrixThunder : Array<Matrix>
 
     private lateinit var umbrella : Array<Bitmap>
     private lateinit var cross : Array<Bitmap>
@@ -65,14 +63,19 @@ class PlayView(context: Context?, navigator: NavController) : View(context), Sen
     var navigator = navigator
 
     init {
+        //setBackgroundColor(Color.CYAN)
+        setBackgroundResource(R.drawable.ic_background)
         val sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorManager.registerListener(
-            this,
-            sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-            SensorManager.SENSOR_DELAY_NORMAL
+                this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL
         )
         initialTime = System.currentTimeMillis()
         Log.i("infoapp", "initial time "+initialTime.toString())
+
+        val list = List(maxThunders, {i->i}).shuffled()
+        rndThunders = Array<Int>(maxThunders, {i->list[i]})
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -92,20 +95,25 @@ class PlayView(context: Context?, navigator: NavController) : View(context), Sen
                     manWidth.toInt(), manHeight.toInt())!!
 
             //THUNDERS
-            thunderWidth = width/9f
-            thunderHeight = height/11f
+            thunderWidth = width/8f
+            thunderHeight = height/10f
 
-            thunders = Array<Bitmap>(numThunders) {
+            thunders = Array<Bitmap>(maxThunders) {
                 ResourcesCompat.getDrawable(resources, R.drawable.ic_thunder, null)?.toBitmap(
                         thunderWidth.toInt(), thunderHeight.toInt())!!
             }
 
-            xThunder = Array<Float>(numThunders) { i ->
-                width / numThunders.toFloat() * i.toFloat()
+            matrixThunder = Array<Matrix>(maxThunders) {
+                _ -> Matrix()
             }
 
-            yThunder = Array<Float>(numThunders) { i ->
-                0f - (height / numThunders.toFloat() * i.toFloat())
+            xThunder = Array<Float>(maxThunders) { i ->
+                width / maxThunders.toFloat() * rndThunders[i].toFloat()
+            }
+
+            yThunder = Array<Float>(maxThunders) { i ->
+                //0f - (height / maxThunders.toFloat() * rndThunders[i].toFloat())
+                0f - (thunderHeight * rndThunders[i])
             }
 
             //LIFES
@@ -127,58 +135,66 @@ class PlayView(context: Context?, navigator: NavController) : View(context), Sen
             }
         }
 
-        val now = System.currentTimeMillis()
-        val dt = now - current
-        current = now
-
-        if(xAcc > 0f){
-            if(xMan > 0) {
-                xMan -= vx * dt / 1000
+        if(lifes > 0) {
+            if (numThunders == maxThunders) {
+                val list = List(maxThunders, { i -> i }).shuffled()
+                rndThunders = Array<Int>(maxThunders, { i -> list[i] })
             }
-        }else if(xAcc < 0f){
-            if(xMan < width-manWidth) {
-                xMan += vx * dt / 1000
+
+            val now = System.currentTimeMillis()
+            val dt = now - current
+            current = now
+
+            if (xAcc > 0f) {
+                if (xMan > 0) {
+                    xMan -= vx * dt / 1000
+                }
+            } else if (xAcc < 0f) {
+                if (xMan < width - manWidth) {
+                    xMan += vx * dt / 1000
+                }
+            } else {
+                xMan = xMan
             }
-        }else{
-            xMan = xMan
+
+            CM.setTranslate(xMan, yMan)
+            canvas.drawBitmap(man, CM, null)
+
+            if (numThunders == 0)
+                loadThunder(canvas)
+            positionThunder(canvas, dt)
+
+            for (i in 0..maxLifes - 1) {
+                canvas.drawBitmap(umbrella[i], xLifes[i], 0f, null)
+            }
+
+            for (i in 0..(maxLifes - lifes - 1)) {
+                canvas.drawBitmap(cross[i], xLifes[i], 0f, null)
+            }
         }
 
-        CM.setTranslate(xMan, yMan)
-        canvas.drawBitmap(man, CM, null)
-
-        for(i in 0..numThunders-1){
-            var TM = Matrix()
-            if(yThunder[i] > height)
-                yThunder[i] = 0f
-            else
-                yThunder[i] = yThunder[i]+vy*dt/1000
-            TM.setTranslate(xThunder[i], yThunder[i])
-            canvas.drawBitmap(thunders[i], TM, null)
-        }
-
-        for(i in 0..maxLifes-1){
-            canvas.drawBitmap(umbrella[i], xLifes[i], 0f, null)
-        }
-
-        for(i in 0..(maxLifes-lifes-1)){
-            canvas.drawBitmap(cross[i], xLifes[i], 0f, null)
-        }
-
-        check_collision()
+        check_collision(canvas)
 
         if(!Conf.gameOver){
             invalidate()
         }
     }
 
-    fun check_collision(){
+    fun check_collision(canvas: Canvas){
         if(lifes!=0){
-            for(i in 0..numThunders-1){
+            for(i in 0..maxThunders-1){
                 if(xThunder[i] > (xMan-manWidth/2) &&
                         xThunder[i] < (xMan+manWidth/2) &&
                         yThunder[i] > height-manHeight-thunderHeight){
                     lifes-=1
-                    yThunder[i] = 0f
+                    yThunder[i] = 0f - (thunderHeight * rndThunders[i])
+                    xThunder[i] = width / maxThunders.toFloat() * rndThunders[i].toFloat()
+                    if(numThunders < maxThunders){
+                        showThunders.add(numThunders, thunders[numThunders])
+                        matrixThunder[numThunders].setTranslate(xThunder[numThunders], yThunder[numThunders])
+                        canvas.drawBitmap(showThunders[numThunders] as Bitmap, matrixThunder[numThunders], null)
+                        numThunders += 1
+                    }
                 }
             }
         }
@@ -197,7 +213,7 @@ class PlayView(context: Context?, navigator: NavController) : View(context), Sen
 
     override fun onSensorChanged(event: SensorEvent?) {
         if(event?.sensor?.type == Sensor.TYPE_ACCELEROMETER){
-            mLastAccelerometer = event?.values.clone()
+            mLastAccelerometer = event.values.clone()
         }
         xAcc = mLastAccelerometer[0]
         if(!Conf.gameOver){
@@ -221,11 +237,36 @@ class PlayView(context: Context?, navigator: NavController) : View(context), Sen
             Log.i("infoapp", "update score: "+url_req)
             val queue = Volley.newRequestQueue(context)
             val stringRequest = StringRequest(Request.Method.PUT, url_req,{_ ->
-                    Toast.makeText(this.context, "Updated user's code", Toast.LENGTH_SHORT).show()
-                    navigator.navigate(R.id.action_play_to_gameOver)}
-                ,{_ -> Log.i("info", "Errore updateScore")})
+                Toast.makeText(this.context, "Updated user's code", Toast.LENGTH_SHORT).show()
+                navigator.navigate(R.id.action_play_to_gameOver)}
+                    ,{_ -> Log.i("info", "Errore updateScore")})
             queue.add(stringRequest)
         }
+    }
+
+    private fun positionThunder(canvas: Canvas, dt: Long){
+        for(i in 0..numThunders-1){
+            if(yThunder[i] > height){
+                yThunder[i] = 0f
+                xThunder[i] = width / maxThunders.toFloat() * rndThunders[i].toFloat()
+                if(numThunders < maxThunders){
+                    showThunders.add(numThunders, thunders[numThunders])
+                    matrixThunder[numThunders].setTranslate(xThunder[numThunders], yThunder[numThunders])
+                    canvas.drawBitmap(showThunders[numThunders] as Bitmap, matrixThunder[numThunders], null)
+                    numThunders += 1
+                }
+            }else
+                yThunder[i] = yThunder[i]+vy*dt/1000
+            matrixThunder[i].setTranslate(xThunder[i], yThunder[i])
+            canvas.drawBitmap(showThunders[i] as Bitmap, matrixThunder[i], null)
+        }
+    }
+
+    private fun loadThunder(canvas: Canvas){
+        showThunders.add(numThunders, thunders[numThunders])
+        matrixThunder[numThunders].setTranslate(xThunder[numThunders], yThunder[numThunders])
+        canvas.drawBitmap(showThunders[numThunders] as Bitmap, matrixThunder[numThunders], null)
+        numThunders += 1
     }
 
 }
