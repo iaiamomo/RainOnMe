@@ -33,6 +33,8 @@ class GameOver : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.i("infoapp", "user "+ Conf.userUID)
+
         queue = Volley.newRequestQueue(context)
         var leaderboard: JSONArray
 
@@ -56,8 +58,7 @@ class GameOver : Fragment(){
                 listVal.addItemDecoration(itemDecoration)
                 listVal.layoutManager = LinearLayoutManager(context)
                 listVal.adapter = LeaderboardAdapter(context, leaderboard)
-                view.findViewById<TextView>(R.id.textViewCurrentScore).text = Conf.score.toString()
-                Toast.makeText(this.context, "leaderboard OK", Toast.LENGTH_SHORT).show()}
+                view.findViewById<TextView>(R.id.textViewCurrentScore).text = Conf.score.toString()}
                 , { error: VolleyError? -> Log.i("info", "Errore leaderboard " + error) })
 
             queue.add(stringRequest)

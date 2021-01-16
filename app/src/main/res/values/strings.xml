@@ -7,11 +7,11 @@
     <string name="howto">
         Tilting your device, you need to collect as many drops of water as possible, avoiding thunders. You have 3 lifes.
         \nYou can decide to play offline or to play online with your friends.
-        \nCreating a game you will get a code tha you can share to play with others.
+        \nCreating a game you will get a code that you can share to play with others.
         \nIf you already have a code you can insert it in the relative field and start playing.
     </string>
     <string name="weather">
-        Insert the location. You need to specify the city and the country.
+        Insert the location. You need to specify the city and the country. (&lt;city&gt;, &lt;country&gt;)
     </string>
     <string name="backpressed">
         If you continue you will be logged out.

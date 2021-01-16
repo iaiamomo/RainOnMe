@@ -5,6 +5,7 @@ import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -19,6 +20,7 @@ class WeatherActivity : AppCompatActivity() {
         Log.i("infoapp", "display name "+ Conf.nameSurname)
         Log.i("infoapp", "game "+ Conf.gameID)
         Log.i("infoapp", "gameover "+ Conf.gameOver.toString())
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -31,8 +33,7 @@ class WeatherActivity : AppCompatActivity() {
             R.id.home -> {
                 Log.i("infoapp", "going back home")
                 finish()
-                return true
-            }
+                return true}
             else -> {
                 return super.onOptionsItemSelected(item)
             }

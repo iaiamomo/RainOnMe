@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,7 @@ class PlayActivity : AppCompatActivity() {
         setContentView(R.layout.activity_play)
         setSupportActionBar(findViewById(R.id.toolbarPlay))
         Log.i("infoapp", "onCreate PLAY")
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -31,7 +33,6 @@ class PlayActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.home -> {
-                Toast.makeText(this, "go back home", Toast.LENGTH_SHORT)
                 Conf.gameID = ""
                 Conf.gameOver = false
                 Conf.polli = false
@@ -64,6 +65,8 @@ class PlayActivity : AppCompatActivity() {
             Conf.gameOver = false
             Conf.polli = false
             finish()
+        }else if(Conf.gameID != "" && Conf.shareCode){
+            Log.i("infoapp", "sharecode")
         }else if(Conf.gameID != "" && !Conf.gameOver){
             val url_req = Conf.url+"game_id="+Conf.gameID+"&who="+Conf.userUID
             val stringRequest = StringRequest(Request.Method.DELETE, url_req, { _ ->

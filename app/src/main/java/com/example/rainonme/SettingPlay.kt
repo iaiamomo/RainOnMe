@@ -9,10 +9,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.volley.Request
@@ -47,6 +49,7 @@ class SettingPlay : Fragment() {
         clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
         view.findViewById<Button>(R.id.buttonCreate).setOnClickListener {
+            Conf.shareCode = true
             createGame(view, userid)
         }
 
@@ -55,7 +58,6 @@ class SettingPlay : Fragment() {
             if (gameidVal.text.isEmpty()) {
                 gameidVal.setError("Insert a valid code")
             } else {
-                Toast.makeText(context, "Code inserted " + gameidVal.text.toString(), Toast.LENGTH_SHORT).show()
                 Conf.gameID = gameidVal.text.toString()
                 enterGame(userid)
             }
@@ -74,8 +76,8 @@ class SettingPlay : Fragment() {
                     reply = JSONObject(response.toString())
                     val gameid = reply!!["game_id"].toString()
                     Conf.gameID = gameid
-                    Toast.makeText(this.context, gameid, Toast.LENGTH_SHORT).show()
                     hideElements(view)
+                    Conf.shareCode = true
                     view.findViewById<TextView>(R.id.textViewGameId).text = gameid
                     view.findViewById<LinearLayout>(R.id.shareCode).visibility = View.VISIBLE
                     view.findViewById<Button>(R.id.buttonPlayGame).setOnClickListener { goToGame() }
@@ -87,6 +89,7 @@ class SettingPlay : Fragment() {
 
     private fun hideElements(view: View){
         view.findViewById<Button>(R.id.buttonCreate).isClickable = false
+        view.findViewById<Button>(R.id.buttonCreate).setBackgroundColor(R.color.grey.toInt())
         view.findViewById<LinearLayout>(R.id.enterCodeLayout).visibility = View.GONE
         view.findViewById<Button>(R.id.buttonOffline).visibility = View.GONE
     }
@@ -97,7 +100,6 @@ class SettingPlay : Fragment() {
         Log.i("infoapp", "url "+url_req)
         val stringRequest = StringRequest(Request.Method.PUT, url_req, {response ->
             reply = JSONObject(response.toString())
-            Toast.makeText(this.context, "Added user to the game", Toast.LENGTH_SHORT).show()
             Log.i("infoapp", "added user to "+Conf.gameID)
             goToGame() }, { _ ->
             Log.i("info", "Errore enterGame")
@@ -107,6 +109,7 @@ class SettingPlay : Fragment() {
 
     private fun goToGame(){
         Conf.alone = false
+        Conf.shareCode = false
         findNavController().navigate(R.id.action_settingPlay_to_play)
     }
 

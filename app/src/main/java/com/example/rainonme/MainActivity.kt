@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         Log.i("infoapp", "onCreate MAIN")
 
@@ -42,6 +44,10 @@ class MainActivity : AppCompatActivity() {
             val password = passwordVal.text.toString()
 
             showNameSurname()
+
+            findViewById<TextView>(R.id.backtologin).setOnClickListener{
+                hideNameSurname()
+            }
 
             findViewById<Button>(R.id.buttonsign).setOnClickListener {
                 updateAccount(email, password)
@@ -74,7 +80,6 @@ class MainActivity : AppCompatActivity() {
                     val updRequest = UserProfileChangeRequest.Builder().setDisplayName(displayName).build()
                     user.updateProfile(updRequest).addOnCompleteListener(this) { task ->
                         if(task.isSuccessful){
-                            Toast.makeText(baseContext, "Authentication OK "+displayName, Toast.LENGTH_SHORT).show()
                             changeActivity()
                         }else{
                             Toast.makeText(baseContext, "Authentication FAILED", Toast.LENGTH_SHORT).show()
@@ -127,6 +132,11 @@ class MainActivity : AppCompatActivity() {
     private fun showNameSurname(){
         findViewById<LinearLayout>(R.id.name_surname).visibility = View.VISIBLE
         findViewById<LinearLayout>(R.id.email_password_buttons).visibility = View.GONE
+    }
+
+    private fun hideNameSurname(){
+        findViewById<LinearLayout>(R.id.name_surname).visibility = View.GONE
+        findViewById<LinearLayout>(R.id.email_password_buttons).visibility = View.VISIBLE
     }
 
     private fun changeActivity(){

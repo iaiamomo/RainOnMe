@@ -27,7 +27,7 @@ import kotlin.collections.ArrayList
 class Weather : Fragment() {
 
     private lateinit var queue : RequestQueue
-    private val resArray = ArrayList<String>()
+    private var resArray = ArrayList<String>()
 
     private var location = ""
 
@@ -57,6 +57,7 @@ class Weather : Fragment() {
                     location = location.replace(" ", "%")
                     Log.i("infoapp", location)
                 }
+                resArray = ArrayList<String>()
                 getLatitudeLongitude(view)
             }
         }
@@ -68,16 +69,21 @@ class Weather : Fragment() {
 
         val stringRequest = StringRequest(Request.Method.GET, locUrl, { response ->
             val reply = JSONObject(response.toString())
-            val data = reply.getJSONArray("data").getJSONObject(0)
-            val lat = data.getString("latitude")
-            val lon = data.getString("longitude")
-            val label = data.getString("label")
-            Log.i("infoapp", "lat "+lat+" lon "+lon+" label"+label)
-            resArray.add(lat)
-            resArray.add(lon)
-            resArray.add(label)
-            getWeather(view) }
-                , {_-> Log.i("infoapp", "Error get latitude longitude")})
+            Log.i("infoapp", "length "+reply.getJSONArray("data").length())
+            try{
+                val data = reply.getJSONArray("data").getJSONObject(0)
+                val lat = data.getString("latitude")
+                val lon = data.getString("longitude")
+                val label = data.getString("label")
+                Log.i("infoapp", "lat "+lat+" lon "+lon+" label"+label)
+                resArray.add(lat)
+                resArray.add(lon)
+                resArray.add(label)
+                getWeather(view)
+            }catch(e: Exception){
+                view.findViewById<EditText>(R.id.editTextCity).setError("No results for this location")
+            }}
+            , {_-> Log.i("infoapp", "Error get latitude longitude")})
 
         queue.add(stringRequest)
     }
@@ -97,7 +103,7 @@ class Weather : Fragment() {
 
             val current = reply.getJSONObject("current")
             val updatedAt = current.getLong("dt")
-            val updatedAtText = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(Date(updatedAt*1000))
+            val updatedAtText = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(updatedAt*1000))
             val temp = current.getString("temp")+"°C"
             val tempMin = daily.getJSONObject(0).getJSONObject("temp").getString("min")+"°C"
             val tempMax = daily.getJSONObject(0).getJSONObject("temp").getString("max")+"°C"
@@ -121,7 +127,7 @@ class Weather : Fragment() {
             view.findViewById<TextView>(R.id.textWeather).visibility = View.VISIBLE
             val itemDecoration = DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL)
             val listVal = view.findViewById<RecyclerView>(R.id.weatherList)
-            listVal.addItemDecoration(itemDecoration)
+            //listVal.addItemDecoration(itemDecoration)
             listVal.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             listVal.adapter = WeatherAdapter(context, data)}
                 ,{ _-> Log.i("infoapp", "error get weather")})

@@ -59,8 +59,6 @@ class GamesAdapter(context: Context?, games: JSONArray) : RecyclerView.Adapter<G
                             notifyDataSetChanged()}
                         ,{ error: VolleyError? -> Log.i("info", "Errore removing user " + error)})
                 queue.add(stringRequest)
-
-                Toast.makeText(context, "Remove user OK", Toast.LENGTH_SHORT).show()
             }, { error: VolleyError? -> Log.i("info", "Errore removing user " + error) })
             queue.add(stringRequest)
         }

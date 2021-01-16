@@ -204,7 +204,6 @@ class PlayView(context: Context?, navigator: NavController) : View(context), Sen
             currScore = (finalTime - initialTime)/2
             Log.i("infoapp", "current score "+currScore.toString())
             Log.i("infoapp", "YOU LOSE")
-            Toast.makeText(context, "YOU LOSE", Toast.LENGTH_SHORT).show()
             Conf.gameOver = true
             Conf.score = currScore.toInt()
             updateScore(currScore)
@@ -237,7 +236,6 @@ class PlayView(context: Context?, navigator: NavController) : View(context), Sen
             Log.i("infoapp", "update score: "+url_req)
             val queue = Volley.newRequestQueue(context)
             val stringRequest = StringRequest(Request.Method.PUT, url_req,{_ ->
-                Toast.makeText(this.context, "Updated user's code", Toast.LENGTH_SHORT).show()
                 navigator.navigate(R.id.action_play_to_gameOver)}
                     ,{_ -> Log.i("info", "Errore updateScore")})
             queue.add(stringRequest)

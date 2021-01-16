@@ -32,7 +32,7 @@ class WeatherAdapter(context: Context?, daily: JSONArray) : RecyclerView.Adapter
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val current = daily.getJSONObject(position)
         val date = current.getLong("dt")
-        val dateText = SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(date*1000))
+        val dateText = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(Date(date*1000))
         val tempMin = current.getJSONObject("temp").getString("min")+"°C"
         val tempMax = current.getJSONObject("temp").getString("max")+"°C"
         val weather = current.getJSONArray("weather").getJSONObject(0).getString("main")

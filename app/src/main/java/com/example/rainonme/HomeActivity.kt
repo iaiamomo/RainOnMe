@@ -17,6 +17,8 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         Log.i("infoapp", "onCreate HOME")
         Log.i("infoapp", "user "+ Conf.userUID)
         Log.i("infoapp", "display name "+ Conf.nameSurname)
@@ -52,7 +54,6 @@ class HomeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.logout -> {
-                Toast.makeText(this, "logout", Toast.LENGTH_SHORT)
                 Log.i("infoapp", "logout going to finish")
                 Conf.userUID = ""
                 Conf.gameID = ""
@@ -62,7 +63,6 @@ class HomeActivity : AppCompatActivity() {
                 return true}
             R.id.profile -> {
                 Log.i("infoapp", "profile")
-                Toast.makeText(this, "profile", Toast.LENGTH_SHORT)
                 val i = Intent(this, ProfileActivity::class.java)
                 startActivity(i)
                 return true}

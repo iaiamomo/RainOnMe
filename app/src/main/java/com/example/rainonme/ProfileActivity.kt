@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -36,6 +37,7 @@ class ProfileActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         setSupportActionBar(findViewById(R.id.toolbarProfile))
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         queue = Volley.newRequestQueue(this)
         auth = FirebaseAuth.getInstance()
@@ -90,7 +92,6 @@ class ProfileActivity : AppCompatActivity(){
             listVal.layoutManager = LinearLayoutManager(this)
             listVal.adapter = GamesAdapter(this, games)
 
-            Toast.makeText(this, "games OK", Toast.LENGTH_SHORT).show()
         }, { error: VolleyError? -> Log.i("info", "Errore games " + error) })
         queue.add(stringRequest)
     }
@@ -103,7 +104,6 @@ class ProfileActivity : AppCompatActivity(){
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.home -> {
-                Toast.makeText(this, "go back home", Toast.LENGTH_SHORT)
                 Conf.gameID = ""
                 Conf.gameOver = false
                 finish()
