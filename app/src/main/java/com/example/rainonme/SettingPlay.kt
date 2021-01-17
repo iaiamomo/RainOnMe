@@ -1,20 +1,21 @@
 package com.example.rainonme
 
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.android.volley.Request
@@ -22,6 +23,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.coroutines.delay
 import org.json.JSONObject
 import android.content.pm.PackageManager as PackageManager
 
@@ -49,7 +51,6 @@ class SettingPlay : Fragment() {
         clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
         view.findViewById<Button>(R.id.buttonCreate).setOnClickListener {
-            Conf.shareCode = true
             createGame(view, userid)
         }
 
@@ -59,6 +60,7 @@ class SettingPlay : Fragment() {
                 gameidVal.setError("Insert a valid code")
             } else {
                 Conf.gameID = gameidVal.text.toString()
+                view.hideKeyboard()
                 enterGame(userid)
             }
         }
@@ -77,12 +79,11 @@ class SettingPlay : Fragment() {
                     val gameid = reply!!["game_id"].toString()
                     Conf.gameID = gameid
                     hideElements(view)
-                    Conf.shareCode = true
                     view.findViewById<TextView>(R.id.textViewGameId).text = gameid
                     view.findViewById<LinearLayout>(R.id.shareCode).visibility = View.VISIBLE
                     view.findViewById<Button>(R.id.buttonPlayGame).setOnClickListener { goToGame() }
-                    view.findViewById<Button>(R.id.buttonCopy).setOnClickListener { copyCode(gameid) }
-                    view.findViewById<Button>(R.id.buttonShare).setOnClickListener { shareCode(gameid) } }
+                    view.findViewById<ImageButton>(R.id.buttonCopy).setOnClickListener { copyCode(gameid) }
+                    view.findViewById<ImageButton>(R.id.buttonShare).setOnClickListener { shareCode(gameid) } }
                 ,{error: VolleyError? -> Log.i("info", "Errore createGame "+error)})
         queue.add(stringRequest)
     }
@@ -101,9 +102,13 @@ class SettingPlay : Fragment() {
         val stringRequest = StringRequest(Request.Method.PUT, url_req, {response ->
             reply = JSONObject(response.toString())
             Log.i("infoapp", "added user to "+Conf.gameID)
-            goToGame() }, { _ ->
-            Log.i("info", "Errore enterGame")
-            view?.findViewById<TextView>(R.id.editTextCode)?.setError("Inser a valide code") })
+            view?.hideKeyboard()
+            Log.i("infoapp", "hide keyboard")
+            Handler().postDelayed(Runnable {
+                goToGame()
+            }, 700)}, { _ ->
+                Log.i("info", "Errore enterGame")
+                view?.findViewById<TextView>(R.id.editTextCode)?.setError("Inser a valide code") })
         queue.add(stringRequest)
     }
 
@@ -134,7 +139,14 @@ class SettingPlay : Fragment() {
 
     private fun aloneGame(){
         Conf.alone = true
+        Conf.shareCode = false
         findNavController().navigate(R.id.action_settingPlay_to_play)
+    }
+
+    fun View.hideKeyboard() {
+        Log.i("infoapp", "hide keyboard")
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 
 }

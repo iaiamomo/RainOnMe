@@ -26,6 +26,7 @@ class HomeActivity : AppCompatActivity() {
         Log.i("infoapp", "gameover "+ Conf.gameOver.toString())
 
         findViewById<Button>(R.id.buttonPlay).setOnClickListener {
+            Conf.shareCode = true
             val i = Intent(this, PlayActivity::class.java)
             startActivity(i)
         }

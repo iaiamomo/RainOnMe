@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
     android:id="@+id/main_layout"
+    android:layout_below="@+id/emailuserlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/emailuserlayout"
     android:gravity="center_horizontal|center_vertical"
     android:orientation="vertical"
+    android:layout_gravity="center_vertical"
     android:padding="16dp">
 
     <ProgressBar
@@ -21,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
-        android:text="Log In with your email and password or using Google."
+        android:text="@string/login"
         android:textAlignment="center"
         android:textSize="24sp" />
 
@@ -30,23 +33,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/email_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/editTextTextEmailAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:cursorVisible="false"
                 android:ems="10"
                 android:fontFamily="monospace"
                 android:hint="Email"
@@ -57,7 +56,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:cursorVisible="false"
                 android:ems="10"
                 android:fontFamily="monospace"
                 android:hint="Password"
@@ -131,31 +129,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/email_password"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/buttonLogIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:fontFamily="monospace"
                 android:text="Log In" />
 
             <Space
-                android:layout_width="11dp"
-                android:layout_height="22dp" />
+                android:layout_width="22dp"
+                android:layout_height="26dp" />
 
             <Button
                 android:id="@+id/buttonSignIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:fontFamily="monospace"
                 android:text="Sign In" />
+
         </LinearLayout>
 
     </LinearLayout>
 
 </LinearLayout>
+</ScrollView>

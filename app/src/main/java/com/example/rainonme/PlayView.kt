@@ -5,6 +5,7 @@ import android.graphics.*
 import android.hardware.*
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -63,8 +64,8 @@ class PlayView(context: Context?, navigator: NavController) : View(context), Sen
     var navigator = navigator
 
     init {
-        //setBackgroundColor(Color.CYAN)
         setBackgroundResource(R.drawable.ic_background)
+
         val sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorManager.registerListener(
                 this,

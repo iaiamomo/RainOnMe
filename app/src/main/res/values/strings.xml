@@ -4,6 +4,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
+    <string name="login">
+        Log In with your email and password or Sign In.
+    </string>
     <string name="howto">
         Tilting your device, you need to collect as many drops of water as possible, avoiding thunders. You have 3 lifes.
         \nYou can decide to play offline or to play online with your friends.

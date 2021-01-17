@@ -52,6 +52,7 @@ class PlayActivity : AppCompatActivity() {
             Conf.gameOver = false
             Conf.gameID = ""
             Conf.polli = false
+            Conf.shareCode = false
             finish()}
         builder.show()
     }
@@ -59,14 +60,10 @@ class PlayActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         Log.i("infoapp", "onPause PLAY")
-        if(Conf.gameID == ""){
-            Log.i("infoapp", "play offline")
-            Conf.alone = false
-            Conf.gameOver = false
-            Conf.polli = false
-            finish()
+        if(Conf.gameID == "" && Conf.shareCode){
+            Log.i("infoapp", "in playsettings")
         }else if(Conf.gameID != "" && Conf.shareCode){
-            Log.i("infoapp", "sharecode")
+            Log.i("infoapp", "sharecode whatsapp")
         }else if(Conf.gameID != "" && !Conf.gameOver){
             val url_req = Conf.url+"game_id="+Conf.gameID+"&who="+Conf.userUID
             val stringRequest = StringRequest(Request.Method.DELETE, url_req, { _ ->
@@ -74,14 +71,18 @@ class PlayActivity : AppCompatActivity() {
                 Conf.gameID = ""
                 Conf.gameOver = false
                 Conf.polli = false
+                Conf.shareCode = false
                 finish()
             }, { error: VolleyError? -> Log.i("info", "Errore removing user " + error)})
             Volley.newRequestQueue(this).add(stringRequest)
-        }else{
-            Log.i("infoapp", "in game over, so leaderboard shown")
-            Conf.gameID = ""
+        }else if(Conf.gameID != "" && Conf.gameOver){
+            Log.i("infoapp", "in game over and leaderboard already shown")
+        }else if(Conf.gameID == ""){
+            Log.i("infoapp", "play offline")
+            Conf.alone = false
             Conf.gameOver = false
             Conf.polli = false
+            Conf.shareCode = false
             finish()
         }
     }
