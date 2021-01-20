@@ -37,7 +37,6 @@
                 android:ems="10"
                 android:fontFamily="monospace"
                 android:hint="City, Country"
-                android:cursorVisible="false"
                 android:inputType="text" />
 
             <Button
