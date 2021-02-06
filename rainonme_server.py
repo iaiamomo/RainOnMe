@@ -7,7 +7,7 @@ from firebase_admin import auth
 from firebase_admin import credentials
 from pymongo import MongoClient
 
-uri = 'mongodb+srv://pythonanywhere:pythonanywhere@clusterrain.h8yey.mongodb.net/test?retryWrites=true&w=majority'
+uri = 'mongodb+srv://uri'
 client = MongoClient(uri)
 collection = client["test"]
 db = collection["leaderboards"]
